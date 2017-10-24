@@ -47,6 +47,7 @@ class List{
 link::link(){
 	val = 0;
 	next = nullptr;
+	prev = nullptr;
 }
 
 link::link(int x, link * ptr){
@@ -158,8 +159,13 @@ Iterator List::end(){
 }
 
 void List::insert(Iterator i, int x){
-	if(size()<=1){
-		pop_front();
+	if(size() <= 1 || i.it->prev == nullptr){
+		push_front();
+		return;
+	}
+	if(i.it->next == nullptr){
+		push_back();
+		return;
 	}
 	link * a = new link ();
 	a->prev = i.it->prev;
@@ -170,6 +176,21 @@ void List::insert(Iterator i, int x){
 }
 
 Iterator List::erase(Iterator i){
+	if(size() <= 1){
+		pop_front();
+		i.it = nullptr;
+		return;
+	}
+	if(i.it->prev == nullptr){
+		i.it = i.it->next;
+		pop_front();
+		return;
+	}
+	if(i.it->next == nullptr){
+		i.it = i.it->prev;
+		pop_back();
+		return;
+	}
 	i.it->next->prev = i.it->prev;
 	i.it->prev->next = i.it->next;
 	Iterator temp = i.it->prev;
@@ -222,9 +243,11 @@ int main(int argc, char * args[]) {
 	assert(a.empty());
 
 	//tests insert and erase functions
-	a.push_front(2);
+	it = a.begin();
+	a.insert(it, 2);
 	a.push_front(1);
-	a.push_back(4);
+	++it;
+	a.insert(it, 4);
 	it = a.begin();
 	++it;
 	++it;
@@ -237,5 +260,17 @@ int main(int argc, char * args[]) {
 	++it;
 	it = a.erase(it);
 	assert(*it == 2);
+	++it;
+	assert(*it == 4);
+	it = a.end();
+	it = a.erase(it);
+	assert(*it == 2);
+	it = a.begin();
+	it = erase(it);
+	assert(*it == 2);
+	assert(a.size() == 1);
+	it = erase(it);
+	assert(a.empty());
+	
 	cout << "all tests passed" << endl;
 }
