@@ -29,7 +29,7 @@ class List{
 	public:
 		List();
 		~List();
-		bool empty_function();
+		bool empty();
 		void push_back(int x);
 		void push_front(int x);
 		int size();
@@ -76,7 +76,7 @@ List::List(){
 }
 
 List::~List(){
-	if(!empty_function()){
+	if(!empty()()){
 		link * ptr = start;
 		while (ptr != finish){
 			ptr = ptr->next;
@@ -86,7 +86,7 @@ List::~List(){
 	delete finish;
 }
 
-bool List::empty_function(){
+bool List::empty(){
 	return (start == nullptr);
 }
 
@@ -158,6 +158,9 @@ Iterator List::end(){
 }
 
 void List::insert(Iterator i, int x){
+	if(size()<=1){
+		pop_front();
+	}
 	link * a = new link ();
 	a->prev = i.it->prev;
 	a->next = i.it;
@@ -180,7 +183,7 @@ int main(int argc, char * args[]) {
 	Iterator it = a.begin();
 
 	//tests for an empty list
-	assert (a.empty_function());
+	assert (a.empty());
 	assert (a.size() == 0);
 
 	//tests push_back and push_front functions
@@ -216,7 +219,7 @@ int main(int argc, char * args[]) {
 	assert(*it == 4);
 	a.pop_back();
 	a.pop_front();
-	assert(a.empty_function());
+	assert(a.empty());
 
 	//tests insert and erase functions
 	a.push_front(2);
