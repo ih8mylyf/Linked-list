@@ -76,7 +76,7 @@ List::List(){
 }
 
 List::~List(){
-	if(!empty()()){
+	if(!empty()){
 		link * ptr = start;
 		while (ptr != finish){
 			ptr = ptr->next;
@@ -93,7 +93,7 @@ bool List::empty(){
 void List::push_back(int x){
 	link * a = new link();
 	a->val = x;
-	if (empty_function()){
+	if (empty()){
 		start = a;
 		finish = a;
 	}
@@ -105,7 +105,7 @@ void List::push_back(int x){
 void List::push_front(int x){
 	link * a = new link();
 	a->val = x;
-	if(empty_function()){
+	if(empty()){
 		start = a;
 		finish = a;
 	}
@@ -117,7 +117,7 @@ void List::push_front(int x){
 int List::size(){
 	int s = 1;
 	link*ptr = start;
-	while(ptr! = finish){
+	while(ptr != finish){
 		ptr = ptr->next;
 		s++;
 	}
