@@ -160,11 +160,11 @@ Iterator List::end(){
 
 void List::insert(Iterator i, int x){
 	if(size() <= 1 || i.it->prev == nullptr){
-		push_front();
+		push_front(x);
 		return;
 	}
 	if(i.it->next == nullptr){
-		push_back();
+		push_back(x);
 		return;
 	}
 	link * a = new link ();
@@ -179,17 +179,17 @@ Iterator List::erase(Iterator i){
 	if(size() <= 1){
 		pop_front();
 		i.it = nullptr;
-		return;
+		return i;
 	}
 	if(i.it->prev == nullptr){
 		i.it = i.it->next;
 		pop_front();
-		return;
+		return i;
 	}
 	if(i.it->next == nullptr){
 		i.it = i.it->prev;
 		pop_back();
-		return;
+		return i;
 	}
 	i.it->next->prev = i.it->prev;
 	i.it->prev->next = i.it->next;
@@ -266,10 +266,10 @@ int main(int argc, char * args[]) {
 	it = a.erase(it);
 	assert(*it == 2);
 	it = a.begin();
-	it = erase(it);
+	it = a.erase(it);
 	assert(*it == 2);
 	assert(a.size() == 1);
-	it = erase(it);
+	it = a.erase(it);
 	assert(a.empty());
 	
 	cout << "all tests passed" << endl;
