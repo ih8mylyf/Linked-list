@@ -159,37 +159,50 @@ Iterator List::end(){
 }
 
 void List::insert(Iterator i, int x){
-	if(size() <= 1 || i.it->prev == nullptr){
-		push_front(x);
-		return;
+  link * a = new link ();
+  a->val = x;
+  if(empty()){
+  	start = a;
+	finish = a;
+	i.it = a;
 	}
-	if(i.it->next == nullptr){
-		push_back(x);
-		return;
+	else if(i.it->next == nullptr){
+		a->prev = i.it;
+		i.it->next = a;
+		i.it = a;
+		finish = a;
 	}
-	link * a = new link ();
-	a->prev = i.it->prev;
-	a->next = i.it;
-	a->val = x;
-	i.it->prev->next = a;
-	i.it->prev = a;
+	else{
+		a->prev = i.it;
+		a->next = i.it->next;
+		i.it->next->prev = a;
+		i.it->next = a;
+		i.it = a;
+  }
 }
 
 Iterator List::erase(Iterator i){
-	if(size() <= 1){
-		pop_front();
-		i.it = nullptr;
-		return i;
+ 	if(i.it == nullptr) return i;
+	else if(i.it->prev == nullptr && i.it->next == nullptr){
+		start = nullptr;
+		finish = nullptr;
+	Iterator temp = Iterator(nullptr);
+		delete i.it;
+		return temp;
 	}
-	if(i.it->prev == nullptr){
-		i.it = i.it->next;
-		pop_front();
-		return i;
+	else if(i.it->prev == nullptr){
+		Iterator temp = i.it->next;
+		start = temp.it;
+		temp.it->prev = nullptr;
+		delete i.it;
+		return temp;
 	}
-	if(i.it->next == nullptr){
-		i.it = i.it->prev;
-		pop_back();
-		return i;
+	else if(i.it->next == nullptr){
+		Iterator temp = i.it->prev;
+		finish = temp.it;
+		temp.it->next = nullptr;
+		delete i.it;
+		return temp;
 	}
 	i.it->next->prev = i.it->prev;
 	i.it->prev->next = i.it->next;
@@ -244,30 +257,31 @@ int main(int argc, char * args[]) {
 
 	//tests insert and erase functions
 	it = a.begin();
-	a.insert(it, 2);
-	a.push_front(1);
-	++it;
-	a.insert(it, 4);
-	it = a.begin();
-	++it;
-	++it;
 	a.insert(it, 3);
-	assert(*it == 4);
-	--it;
-	assert(*it == 3);
-	--it;
+	a.push_front(1);
+	a.insert(it, 4);
+	it = a.begin(); 
+	a.insert(it, 2);
 	assert(*it == 2);
-	++it;
+	it = a.end();
+	assert (*it==4);
+	--it;
+	assert (*it==3);
+	--it; 
+	assert(*it == 2);
+	--it;
+	assert(*it == 1);
+	
 	it = a.erase(it);
 	assert(*it == 2);
 	++it;
-	assert(*it == 4);
+	assert(*it == 3);
 	it = a.end();
 	it = a.erase(it);
-	assert(*it == 2);
+	assert(*it == 3);
 	it = a.begin();
 	it = a.erase(it);
-	assert(*it == 2);
+	assert(*it == 3);
 	assert(a.size() == 1);
 	it = a.erase(it);
 	assert(a.empty());
