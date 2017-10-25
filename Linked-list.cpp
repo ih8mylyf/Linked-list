@@ -37,7 +37,7 @@ class List{
 		void pop_front();
 		Iterator begin();
 		Iterator end();
-		void insert(Iterator i, int x);
+		void insert(Iterator & i, int x);
 		Iterator erase(Iterator i);
 	private:
 		link * start;
@@ -158,13 +158,13 @@ Iterator List::end(){
 	return Iterator(finish);
 }
 
-void List::insert(Iterator i, int x){
-  link * a = new link ();
-  a->val = x;
-  if(empty()){
-  	start = a;
-	finish = a;
-	i.it = a;
+void List::insert(Iterator & i, int x){
+	link * a = new link ();
+	a->val = x;
+	if(empty()){
+		start = a;
+		finish = a;
+		i.it = a;
 	}
 	else if(i.it->next == nullptr){
 		a->prev = i.it;
@@ -175,14 +175,14 @@ void List::insert(Iterator i, int x){
 	else{
 		a->prev = i.it;
 		a->next = i.it->next;
-		i.it->next->prev = a;
+		i.it->next->prev=a;
 		i.it->next = a;
 		i.it = a;
   }
 }
 
 Iterator List::erase(Iterator i){
- 	if(i.it == nullptr) return i;
+	if(i.it == nullptr) return i;
 	else if(i.it->prev == nullptr && i.it->next == nullptr){
 		start = nullptr;
 		finish = nullptr;
@@ -223,7 +223,7 @@ int main(int argc, char * args[]) {
 	//tests push_back and push_front functions
 	a.push_back(4);
 	a.push_back(5);
-	it=a.begin();
+	it=a.begin(); 
 	assert (*it == 4);
 	++it;
 	assert (*it == 5);
@@ -266,7 +266,7 @@ int main(int argc, char * args[]) {
 	it = a.end();
 	assert (*it==4);
 	--it;
-	assert (*it==3);
+ 	assert (*it==3);
 	--it; 
 	assert(*it == 2);
 	--it;
@@ -285,6 +285,6 @@ int main(int argc, char * args[]) {
 	assert(a.size() == 1);
 	it = a.erase(it);
 	assert(a.empty());
-	
+
 	cout << "all tests passed" << endl;
 }
